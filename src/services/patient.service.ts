@@ -35,20 +35,20 @@ export const createPatientService = async (paciente: Omit<Paciente, 'id'>, id_us
     ]);
 };
 
-export const updatePatientService = async (id: number, paciente: Omit<Paciente, 'id'>, id_usuario: number): Promise<void> => {
+export const updatePatientService = async (id: number, paciente: Omit<Paciente, 'id'>): Promise<void> => {
     const query = `
-        UPDATE tblc_paciente SET nombre = ?, apellidos = ?, fecha_nacimiento = ?,
-        sexo = ?, telefono = ?, correo = ?, direccion = ?, familiar_responsable = ?
-        WHERE id_paciente = ? AND id_usuario = ?
+        UPDATE tblc_paciente SET nombre = ?, apellidos = ?,
+        fecha_nacimiento = ?, sexo = ?, telefono = ?, correo = ?,
+        direccion = ?, familiar_responsable = ? WHERE id_paciente = ?
     `;
     await db.query(query, [
         paciente.nombre, paciente.apellidos, paciente.fecha_registro,
         paciente.sexo, paciente.telefono, paciente.correo,
-        paciente.direccion, paciente.familiar_responsable, id, id_usuario
+        paciente.direccion, paciente.familiar_responsable, id
     ]);
 };
 
-export const deletePatientService = async (id: number, id_usuario: number): Promise<void> => {
-    const query = 'UPDATE tblc_paciente SET fecha_eliminado = now() WHERE id_paciente = ? AND id_usuario = ?';
-    await db.query(query, [id, id_usuario]);
+export const deletePatientService = async (id: number): Promise<void> => {
+    const query = 'UPDATE tblc_paciente SET fecha_eliminado = now() WHERE id_paciente = ?';
+    await db.query(query, [id]);
 };

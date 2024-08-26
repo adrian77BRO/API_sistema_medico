@@ -1,22 +1,22 @@
 import { Request, Response } from 'express';
 import {
-    getAllPatientsService,
-    getPatientByIdService,
-    getPatientCountService,
-    createPatientService,
-    updatePatientService,
-    deletePatientService
-} from '../services/patient.service';
+    getAllSchedulesService,
+    getScheduleByIdService,
+    getScheduleCountService,
+    createScheduleService,
+    updateScheduleService,
+    deleteScheduleService
+} from '../services/schedule.service';
 
-export const getAllPatientsController = async (req: Request, res: Response) => {
+export const getAllSchedulesController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const pacientes = await getAllPatientsService(id_usuario);
+        const horarios = await getAllSchedulesService(id_usuario);
 
         res.status(200).json({
             status: 'success',
-            message: 'Todos los pacientes',
-            pacientes
+            message: 'Todos los horarios',
+            horarios
         });
     } catch (error) {
         res.status(500).json({
@@ -27,21 +27,21 @@ export const getAllPatientsController = async (req: Request, res: Response) => {
     }
 };
 
-export const getPatientByIdController = async (req: Request, res: Response) => {
+export const getScheduleByIdController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const paciente = await getPatientByIdService(parseInt(req.params.id), id_usuario);
+        const horario = await getScheduleByIdService(parseInt(req.params.id), id_usuario);
 
-        if (paciente) {
+        if (horario) {
             res.status(200).json({
                 status: 'success',
-                message: 'Paciente encontrado exitosamente',
-                paciente
+                message: 'Horario encontrado exitosamente',
+                horario
             });
         } else {
             res.status(404).json({
                 status: 'error',
-                message: 'Paciente no encontrado'
+                message: 'Horario no encontrado'
             });
         }
     } catch (error) {
@@ -53,10 +53,10 @@ export const getPatientByIdController = async (req: Request, res: Response) => {
     }
 };
 
-export const getPatientCountController = async (req: Request, res: Response) => {
+export const getScheduleCountController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const count = await getPatientCountService(id_usuario);
+        const count = await getScheduleCountService(id_usuario);
 
         res.status(200).json({
             status: 'success',
@@ -72,16 +72,16 @@ export const getPatientCountController = async (req: Request, res: Response) => 
 };
 
 
-export const createPatientController = async (req: Request, res: Response) => {
+export const createScheduleController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const nuevoPaciente = req.body;
-        await createPatientService(nuevoPaciente, id_usuario);
+        const nuevoHorario = req.body;
+        await createScheduleService(nuevoHorario, id_usuario);
 
         res.status(201).json({
             status: 'success',
-            message: 'Paciente registrado exitosamente',
-            paciente: nuevoPaciente
+            message: 'Horario registrado exitosamente',
+            horario: nuevoHorario
         });
     } catch (error) {
         res.status(500).json({
@@ -92,23 +92,23 @@ export const createPatientController = async (req: Request, res: Response) => {
     }
 };
 
-export const updatePatientController = async (req: Request, res: Response) => {
+export const updateScheduleController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const paciente = await getPatientByIdService(parseInt(req.params.id), id_usuario);
+        const horario = await getScheduleByIdService(parseInt(req.params.id), id_usuario);
 
-        if (paciente) {
-            const pacienteEditado = req.body;
-            await updatePatientService(parseInt(req.params.id), pacienteEditado);
+        if (horario) {
+            const horarioEditado = req.body;
+            await updateScheduleService(parseInt(req.params.id), horarioEditado);
             res.status(201).json({
                 status: 'success',
-                message: 'Paciente actualizado exitosamente',
-                paciente: pacienteEditado
+                message: 'Horario actualizado exitosamente',
+                horario: horarioEditado
             });
         } else {
             res.status(404).json({
                 status: 'error',
-                message: 'Paciente no encontrado'
+                message: 'Horario no encontrado'
             });
         }
     } catch (error) {
@@ -120,21 +120,21 @@ export const updatePatientController = async (req: Request, res: Response) => {
     }
 };
 
-export const deletePatientController = async (req: Request, res: Response) => {
+export const deleteScheduleController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const paciente = await getPatientByIdService(parseInt(req.params.id), id_usuario);
+        const horario = await getScheduleByIdService(parseInt(req.params.id), id_usuario);
 
-        if (paciente) {
-            await deletePatientService(parseInt(req.params.id));
+        if (horario) {
+            await deleteScheduleService(parseInt(req.params.id));
             res.status(201).json({
                 status: 'success',
-                message: 'Paciente eliminado exitosamente'
+                message: 'Horario eliminado exitosamente'
             });
         } else {
             res.status(404).json({
                 status: 'error',
-                message: 'Paciente no encontrado'
+                message: 'Horario no encontrado'
             });
         }
     } catch (error) {

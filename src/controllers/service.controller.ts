@@ -1,22 +1,22 @@
 import { Request, Response } from 'express';
 import {
-    getAllPatientsService,
-    getPatientByIdService,
-    getPatientCountService,
-    createPatientService,
-    updatePatientService,
-    deletePatientService
-} from '../services/patient.service';
+    getAllServicesService,
+    getServiceByIdService,
+    getServiceCountService,
+    createServiceService,
+    updateServiceService,
+    deleteServiceService
+} from '../services/service.service';
 
-export const getAllPatientsController = async (req: Request, res: Response) => {
+export const getAllServicesController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const pacientes = await getAllPatientsService(id_usuario);
+        const servicios = await getAllServicesService(id_usuario);
 
         res.status(200).json({
             status: 'success',
-            message: 'Todos los pacientes',
-            pacientes
+            message: 'Todos los servicios',
+            servicios
         });
     } catch (error) {
         res.status(500).json({
@@ -27,21 +27,21 @@ export const getAllPatientsController = async (req: Request, res: Response) => {
     }
 };
 
-export const getPatientByIdController = async (req: Request, res: Response) => {
+export const getServiceByIdController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const paciente = await getPatientByIdService(parseInt(req.params.id), id_usuario);
+        const servicio = await getServiceByIdService(parseInt(req.params.id), id_usuario);
 
-        if (paciente) {
+        if (servicio) {
             res.status(200).json({
                 status: 'success',
-                message: 'Paciente encontrado exitosamente',
-                paciente
+                message: 'Servicio encontrado exitosamente',
+                servicio
             });
         } else {
             res.status(404).json({
                 status: 'error',
-                message: 'Paciente no encontrado'
+                message: 'Servicio no encontrado'
             });
         }
     } catch (error) {
@@ -53,10 +53,10 @@ export const getPatientByIdController = async (req: Request, res: Response) => {
     }
 };
 
-export const getPatientCountController = async (req: Request, res: Response) => {
+export const getServiceCountController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const count = await getPatientCountService(id_usuario);
+        const count = await getServiceCountService(id_usuario);
 
         res.status(200).json({
             status: 'success',
@@ -72,16 +72,16 @@ export const getPatientCountController = async (req: Request, res: Response) => 
 };
 
 
-export const createPatientController = async (req: Request, res: Response) => {
+export const createServiceController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const nuevoPaciente = req.body;
-        await createPatientService(nuevoPaciente, id_usuario);
+        const nuevoServicio = req.body;
+        await createServiceService(nuevoServicio, id_usuario);
 
         res.status(201).json({
             status: 'success',
-            message: 'Paciente registrado exitosamente',
-            paciente: nuevoPaciente
+            message: 'Servicio registrado exitosamente',
+            servicio: nuevoServicio
         });
     } catch (error) {
         res.status(500).json({
@@ -92,23 +92,23 @@ export const createPatientController = async (req: Request, res: Response) => {
     }
 };
 
-export const updatePatientController = async (req: Request, res: Response) => {
+export const updateServiceController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const paciente = await getPatientByIdService(parseInt(req.params.id), id_usuario);
+        const servicio = await getServiceByIdService(parseInt(req.params.id), id_usuario);
 
-        if (paciente) {
-            const pacienteEditado = req.body;
-            await updatePatientService(parseInt(req.params.id), pacienteEditado);
+        if (servicio) {
+            const servicioEditado = req.body;
+            await updateServiceService(parseInt(req.params.id), servicioEditado);
             res.status(201).json({
                 status: 'success',
-                message: 'Paciente actualizado exitosamente',
-                paciente: pacienteEditado
+                message: 'Servicio actualizado exitosamente',
+                servicio: servicioEditado
             });
         } else {
             res.status(404).json({
                 status: 'error',
-                message: 'Paciente no encontrado'
+                message: 'Servicio no encontrado'
             });
         }
     } catch (error) {
@@ -120,21 +120,21 @@ export const updatePatientController = async (req: Request, res: Response) => {
     }
 };
 
-export const deletePatientController = async (req: Request, res: Response) => {
+export const deleteServiceController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const paciente = await getPatientByIdService(parseInt(req.params.id), id_usuario);
+        const servicio = await getServiceByIdService(parseInt(req.params.id), id_usuario);
 
-        if (paciente) {
-            await deletePatientService(parseInt(req.params.id));
+        if (servicio) {
+            await deleteServiceService(parseInt(req.params.id));
             res.status(201).json({
                 status: 'success',
-                message: 'Paciente eliminado exitosamente'
+                message: 'Servicio eliminado exitosamente'
             });
         } else {
             res.status(404).json({
                 status: 'error',
-                message: 'Paciente no encontrado'
+                message: 'Servicio no encontrado'
             });
         }
     } catch (error) {

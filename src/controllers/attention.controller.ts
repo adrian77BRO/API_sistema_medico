@@ -1,22 +1,22 @@
 import { Request, Response } from 'express';
 import {
-    getAllPatientsService,
-    getPatientByIdService,
-    getPatientCountService,
-    createPatientService,
-    updatePatientService,
-    deletePatientService
-} from '../services/patient.service';
+    getAllAttentionsService,
+    getAttentionByIdService,
+    getAttentionCountService,
+    createAttentionService,
+    updateAttentionService,
+    deleteAttentionService
+} from '../services/attention.service';
 
-export const getAllPatientsController = async (req: Request, res: Response) => {
+export const getAllAttentionsController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const pacientes = await getAllPatientsService(id_usuario);
+        const atenciones = await getAllAttentionsService(id_usuario);
 
         res.status(200).json({
             status: 'success',
-            message: 'Todos los pacientes',
-            pacientes
+            message: 'Atenciones médicas',
+            atenciones
         });
     } catch (error) {
         res.status(500).json({
@@ -27,21 +27,21 @@ export const getAllPatientsController = async (req: Request, res: Response) => {
     }
 };
 
-export const getPatientByIdController = async (req: Request, res: Response) => {
+export const getAttentionByIdController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const paciente = await getPatientByIdService(parseInt(req.params.id), id_usuario);
+        const atencion = await getAttentionByIdService(parseInt(req.params.id), id_usuario);
 
-        if (paciente) {
+        if (atencion) {
             res.status(200).json({
                 status: 'success',
-                message: 'Paciente encontrado exitosamente',
-                paciente
+                message: 'Atención médica encontrada exitosamente',
+                atencion
             });
         } else {
             res.status(404).json({
                 status: 'error',
-                message: 'Paciente no encontrado'
+                message: 'Atención médica no encontrada'
             });
         }
     } catch (error) {
@@ -53,10 +53,10 @@ export const getPatientByIdController = async (req: Request, res: Response) => {
     }
 };
 
-export const getPatientCountController = async (req: Request, res: Response) => {
+export const getAttentionCountController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const count = await getPatientCountService(id_usuario);
+        const count = await getAttentionCountService(id_usuario);
 
         res.status(200).json({
             status: 'success',
@@ -72,16 +72,16 @@ export const getPatientCountController = async (req: Request, res: Response) => 
 };
 
 
-export const createPatientController = async (req: Request, res: Response) => {
+export const createAttentionController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const nuevoPaciente = req.body;
-        await createPatientService(nuevoPaciente, id_usuario);
+        const nuevaAtencion = req.body;
+        await createAttentionService(nuevaAtencion, id_usuario);
 
         res.status(201).json({
             status: 'success',
-            message: 'Paciente registrado exitosamente',
-            paciente: nuevoPaciente
+            message: 'Atención médica registrada exitosamente',
+            atencion: nuevaAtencion
         });
     } catch (error) {
         res.status(500).json({
@@ -92,23 +92,23 @@ export const createPatientController = async (req: Request, res: Response) => {
     }
 };
 
-export const updatePatientController = async (req: Request, res: Response) => {
+export const updateAttentionController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const paciente = await getPatientByIdService(parseInt(req.params.id), id_usuario);
+        const atencion = await getAttentionByIdService(parseInt(req.params.id), id_usuario);
 
-        if (paciente) {
-            const pacienteEditado = req.body;
-            await updatePatientService(parseInt(req.params.id), pacienteEditado);
+        if (atencion) {
+            const atencionEditada = req.body;
+            await updateAttentionService(parseInt(req.params.id), atencionEditada);
             res.status(201).json({
                 status: 'success',
-                message: 'Paciente actualizado exitosamente',
-                paciente: pacienteEditado
+                message: 'Atención médica actualizada exitosamente',
+                atencion: atencionEditada
             });
         } else {
             res.status(404).json({
                 status: 'error',
-                message: 'Paciente no encontrado'
+                message: 'Atención médica no encontrada'
             });
         }
     } catch (error) {
@@ -120,21 +120,21 @@ export const updatePatientController = async (req: Request, res: Response) => {
     }
 };
 
-export const deletePatientController = async (req: Request, res: Response) => {
+export const deleteAttentionController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const paciente = await getPatientByIdService(parseInt(req.params.id), id_usuario);
+        const atencion = await getAttentionByIdService(parseInt(req.params.id), id_usuario);
 
-        if (paciente) {
-            await deletePatientService(parseInt(req.params.id));
+        if (atencion) {
+            await deleteAttentionService(parseInt(req.params.id));
             res.status(201).json({
                 status: 'success',
-                message: 'Paciente eliminado exitosamente'
+                message: 'Atención médica eliminada exitosamente'
             });
         } else {
             res.status(404).json({
                 status: 'error',
-                message: 'Paciente no encontrado'
+                message: 'Atención médica no encontrada'
             });
         }
     } catch (error) {

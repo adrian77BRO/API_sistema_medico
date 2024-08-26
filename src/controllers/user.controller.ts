@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { registerUser, findUserByEmail } from '../services/user.service';
+import { findUserByEmail, getProfileService } from '../services/user.service';
 
 const JWT_SECRET = process.env.JWT_SECRET || '';
 
-export const registerController = async (req: Request, res: Response) => {
+/*export const registerController = async (req: Request, res: Response) => {
     try {
         const nuevoUsuario = req.body;
         const existeCorreo = await findUserByEmail(nuevoUsuario.correo);
@@ -32,7 +32,7 @@ export const registerController = async (req: Request, res: Response) => {
         });
         console.error(error);
     }
-};
+};*/
 
 export const loginController = async (req: Request, res: Response) => {
     try {
@@ -78,5 +78,32 @@ export const loginController = async (req: Request, res: Response) => {
             error,
         });
         console.error(error);
+    }
+};
+
+export const getProfileController = async (req: Request, res: Response) => {
+    try {
+        const id_usuario = (req as any).user.id;
+        const perfil = await getProfileService(id_usuario);
+
+        if (perfil) {
+            res.status(200).json({
+                status: 'success',
+                message: 'Perfil del usuario',
+                perfil
+            });
+        } else {
+            res.status(404).json({
+                status: 'error',
+                message: 'Usuario no encontrado'
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al obtener',
+            error
+        });
+        console.log(error);
     }
 };

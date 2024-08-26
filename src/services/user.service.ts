@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import { db } from '../config/database';
 import { Usuario } from '../models/user';
 
@@ -8,7 +7,22 @@ export const findUserByEmail = async (correo: string): Promise<Usuario | null> =
     return usuarios.length ? usuarios[0] : null;
 };
 
-export const registerUser = async (usuario: Omit<Usuario, 'id'>): Promise<void> => {
+export const getProfileService = async (id_usuario: number): Promise<Usuario | null> => {
+    const query = `SELECT m.nombre municipio, e.nombre estado, u.nombre, u.apellidos, u.correo,
+            u.telefono, u.cedula, u.cedula_especialidad, u.cedula_subespecialidad,
+            s.nombre especialidad, u.telefono_urgencias, u.whatsapp, u.direccion, u.facebook,
+            u.twitter, u.instagram, u.web, u.sobre_mi, u.experiencia
+            FROM tblc_usuario u
+            JOIN tblc_especialidad s ON s.id_especialidad = u.id_especialidad
+            JOIN tblc_municipio m ON m.id_municipio = u.id_municipio
+            JOIN tblc_estado e ON e.id_estado = m.id_estado
+            WHERE u.id_usuario = ? AND u.tipo = 2 AND u.fecha_eliminado IS NULL;`
+    const [rows] = await db.query(query, [id_usuario]);
+    const usuarios = rows as Usuario[];
+    return usuarios.length ? usuarios[0] : null;
+};
+
+/*export const registerUser = async (usuario: Omit<Usuario, 'id'>): Promise<void> => {
     const query = `
     INSERT INTO tblc_usuario (nombre, apellidos, usuario, pass, tipo, estatus,
     acceso_app, fecha_registro, telefono, correo, id_especialidad, id_medico,
@@ -29,4 +43,4 @@ export const registerUser = async (usuario: Omit<Usuario, 'id'>): Promise<void> 
         usuario.estatus_principal, usuario.id_municipio, usuario.estatus_citas_web,
         usuario.estatus_ubicación, usuario.tipo_cita, usuario.id_vendedor]
     );
-};
+};*/
