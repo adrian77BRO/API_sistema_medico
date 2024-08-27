@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { findUserByEmail, getProfileService } from '../services/user.service';
+import {
+    findUserByEmail,
+    getProfileService,
+    updateProfileService
+} from '../services/user.service';
 
 const JWT_SECRET = process.env.JWT_SECRET || '';
 
@@ -105,5 +109,24 @@ export const getProfileController = async (req: Request, res: Response) => {
             error
         });
         console.log(error);
+    }
+};
+
+export const updateProfileController = async (req: Request, res: Response) => {
+    try {
+        const id_usuario = (req as any).user.id;
+        const perfilEditado = req.body;
+        await updateProfileService(id_usuario, perfilEditado);
+        res.status(201).json({
+            status: 'success',
+            message: 'Datos actualizados exitosamente',
+            perfil: perfilEditado
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al actualizar',
+            error
+        });
     }
 };

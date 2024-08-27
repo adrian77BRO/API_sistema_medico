@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import userRouter from './routes/user.router';
 import patientRouter from './routes/patient.router';
+import historyRouter from './routes/history.router';
 import appointmentRouter from './routes/appointment.router';
 import attentionRouter from './routes/attention.router';
 import serviceRouter from './routes/service.router';
@@ -16,8 +17,9 @@ app.use(express.json());
 
 app.use('/usuarios', userRouter);
 app.use('/pacientes', patientRouter);
+app.use('/historial', historyRouter);
 app.use('/citas', appointmentRouter);
-app.use('/atenciones', attentionRouter);
+app.use('/atencion', attentionRouter);
 app.use('/servicios', serviceRouter);
 app.use('/horarios', scheduleRouter);
 app.use('/ubicacion', locationRouter);

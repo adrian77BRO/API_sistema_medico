@@ -3,7 +3,7 @@ import { Servicio } from '../models/service';
 import { createLink } from '../utils/createLinkService';
 
 export const getAllServicesService = async (id_usuario: number): Promise<Servicio[]> => {
-    const query = 'SELECT * FROM tbl_servicio WHERE fecha_eliminado IS NULL AND id_usuario = ?';
+    const query = 'SELECT * FROM tbl_servicio WHERE fecha_eliminado IS NULL AND id_usuario = ? ORDER BY orden';
     const [rows] = await db.query(query, [id_usuario]);
     return rows as Servicio[];
 };
