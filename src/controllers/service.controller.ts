@@ -3,6 +3,7 @@ import {
     getAllServicesService,
     getServiceByIdService,
     getServiceCountService,
+    getActiveServicesService,
     createServiceService,
     updateServiceService,
     deleteServiceService
@@ -61,6 +62,25 @@ export const getServiceCountController = async (req: Request, res: Response) => 
         res.status(200).json({
             status: 'success',
             count
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al obtener',
+            error
+        });
+    }
+};
+
+export const getActiveServicesController = async (req: Request, res: Response) => {
+    try {
+        const id_usuario = (req as any).user.id;
+        const servicios = await getActiveServicesService(id_usuario);
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Servicios activos en el sistema',
+            servicios
         });
     } catch (error) {
         res.status(500).json({

@@ -3,6 +3,7 @@ import {
     getAllServicesController,
     getServiceByIdController,
     getServiceCountController,
+    getActiveServicesController,
     createServiceController,
     updateServiceController,
     deleteServiceController
@@ -12,6 +13,7 @@ import { authenticateJWT } from '../middlewares/auth.middleware';
 const serviceRouter = express.Router();
 
 serviceRouter.get('/', authenticateJWT, getAllServicesController);
+serviceRouter.get('/active', authenticateJWT, getActiveServicesController)
 serviceRouter.get('/count', authenticateJWT, getServiceCountController);
 serviceRouter.get('/:id', authenticateJWT, getServiceByIdController);
 serviceRouter.post('/', authenticateJWT, createServiceController);

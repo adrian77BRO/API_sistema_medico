@@ -22,6 +22,12 @@ export const getServiceCountService = async (id_usuario: number): Promise<number
     return count;
 };
 
+export const getActiveServicesService = async (id_usuario: number): Promise<Servicio[]> => {
+    const query = 'SELECT nombre, costo FROM tbl_servicio WHERE estatus_sistema = 1 AND fecha_eliminado IS NULL AND id_usuario = ?';
+    const [rows] = await db.query(query, [id_usuario]);
+    return rows as Servicio[];
+};
+
 export const createServiceService = async (servicio: Omit<Servicio, 'id'>, id_usuario: number): Promise<void> => {
     const query = `
         INSERT INTO tbl_servicio (id_usuario, nombre, enlace, descripcion, estatus, orden, costo,

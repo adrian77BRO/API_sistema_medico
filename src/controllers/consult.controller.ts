@@ -1,25 +1,25 @@
 import { Request, Response } from 'express';
 import {
-    getAllAppointmentsService,
-    getAppointmentByIdService,
-    getAppointmentsByPatientService,
-    getAppointmentsByDateService,
-    getAppointmentsByStatusService,
-    getAppointmentCountService,
-    createAppointmentService,
-    updateAppointmentService,
-    deleteAppointmentService
-} from '../services/appointment.service';
+    getAllConsultsService,
+    getConsultByIdService,
+    getConsultsByPatientService,
+    getConsultsByDateService,
+    getConsultsByStatusService,
+    getConsultCountService,
+    createConsultService,
+    updateConsultService,
+    deleteConsultService
+} from '../services/consult.service';
 
-export const getAllAppointmentsController = async (req: Request, res: Response) => {
+export const getAllConsultsController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const citas = await getAllAppointmentsService(id_usuario);
+        const consultas = await getAllConsultsService(id_usuario);
 
         res.status(200).json({
             status: 'success',
-            message: 'Todas las citas',
-            citas
+            message: 'Todas las consultas',
+            consultas
         });
     } catch (error) {
         res.status(500).json({
@@ -30,21 +30,21 @@ export const getAllAppointmentsController = async (req: Request, res: Response) 
     }
 };
 
-export const getAppointmentByIdController = async (req: Request, res: Response) => {
+export const getConsultByIdController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const cita = await getAppointmentByIdService(parseInt(req.params.id), id_usuario);
+        const consulta = await getConsultByIdService(parseInt(req.params.id), id_usuario);
 
-        if (cita) {
+        if (consulta) {
             res.status(200).json({
                 status: 'success',
-                message: 'Cita encontrada exitosamente',
-                cita
+                message: 'Consulta encontrada exitosamente',
+                consulta
             });
         } else {
             res.status(404).json({
                 status: 'error',
-                message: 'Cita no encontrada'
+                message: 'Consulta no encontrada'
             });
         }
     } catch (error) {
@@ -56,42 +56,16 @@ export const getAppointmentByIdController = async (req: Request, res: Response) 
     }
 };
 
-export const getAppointmentsByPatientController = async (req: Request, res: Response) => {
+export const getConsultsByPatientController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const citas = await getAppointmentsByPatientService(id_usuario, req.params.paciente);
+        const consultas = await getConsultsByPatientService(id_usuario, req.params.paciente);
 
-        if (citas.length > 0) {
+        if (consultas.length > 0) {
             res.status(200).json({
                 status: 'success',
-                message: 'Citas encontradas',
-                citas
-            });
-        } else {
-            res.status(404).json({
-                status: 'error',
-                message: 'No se encontraron resultados'
-            });
-        }
-    } catch (error) {
-        res.status(500).json({
-            status: 'error',
-            message: 'Error al obtener',
-            error
-        });
-    }
-};
-
-export const getAppointmentsByDateController = async (req: Request, res: Response) => {
-    try {
-        const id_usuario = (req as any).user.id;
-        const citas = await getAppointmentsByDateService(id_usuario, req.params.fecha);
-
-        if (citas.length > 0) {
-            res.status(200).json({
-                status: 'success',
-                message: 'Citas encontradas',
-                citas
+                message: 'Consultas encontradas',
+                consultas
             });
         } else {
             res.status(404).json({
@@ -108,16 +82,16 @@ export const getAppointmentsByDateController = async (req: Request, res: Respons
     }
 };
 
-export const getAppointmentsByStatusController = async (req: Request, res: Response) => {
+export const getConsultsByDateController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const citas = await getAppointmentsByStatusService(id_usuario, parseInt(req.params.estatus));
+        const consultas = await getConsultsByDateService(id_usuario, req.params.fecha);
 
-        if (citas.length > 0) {
+        if (consultas.length > 0) {
             res.status(200).json({
                 status: 'success',
-                message: 'Citas encontradas',
-                citas
+                message: 'Consultas encontradas',
+                consultas
             });
         } else {
             res.status(404).json({
@@ -134,10 +108,36 @@ export const getAppointmentsByStatusController = async (req: Request, res: Respo
     }
 };
 
-export const getAppointmentCountController = async (req: Request, res: Response) => {
+export const getConsultsByStatusController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const count = await getAppointmentCountService(id_usuario);
+        const consultas = await getConsultsByStatusService(id_usuario, parseInt(req.params.estatus));
+
+        if (consultas.length > 0) {
+            res.status(200).json({
+                status: 'success',
+                message: 'Consultas encontradas',
+                consultas
+            });
+        } else {
+            res.status(404).json({
+                status: 'error',
+                message: 'No se encontraron resultados'
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al obtener',
+            error
+        });
+    }
+};
+
+export const getConsultCountController = async (req: Request, res: Response) => {
+    try {
+        const id_usuario = (req as any).user.id;
+        const count = await getConsultCountService(id_usuario);
 
         res.status(200).json({
             status: 'success',
@@ -153,16 +153,16 @@ export const getAppointmentCountController = async (req: Request, res: Response)
 };
 
 
-export const createAppointmentController = async (req: Request, res: Response) => {
+export const createConsultController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const nuevaCita = req.body;
-        await createAppointmentService(nuevaCita, parseInt(req.params.paciente), id_usuario);
+        const nuevaConsulta = req.body;
+        await createConsultService(nuevaConsulta, parseInt(req.params.paciente), id_usuario);
 
         res.status(201).json({
             status: 'success',
-            message: 'Cita registrada exitosamente',
-            cita: nuevaCita
+            message: 'Consulta registrada exitosamente',
+            consulta: nuevaConsulta
         });
     } catch (error) {
         res.status(500).json({
@@ -173,23 +173,23 @@ export const createAppointmentController = async (req: Request, res: Response) =
     }
 };
 
-export const updateAppointmentController = async (req: Request, res: Response) => {
+export const updateConsultController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const cita = await getAppointmentByIdService(parseInt(req.params.id), id_usuario);
+        const consulta = await getConsultByIdService(parseInt(req.params.id), id_usuario);
 
-        if (cita) {
-            const citaEditada = req.body;
-            await updateAppointmentService(parseInt(req.params.id), citaEditada);
+        if (consulta) {
+            const consultaEditada = req.body;
+            await updateConsultService(parseInt(req.params.id), consultaEditada);
             res.status(201).json({
                 status: 'success',
-                message: 'Cita actualizada exitosamente',
-                cita: citaEditada
+                message: 'Consulta actualizada exitosamente',
+                consulta: consultaEditada
             });
         } else {
             res.status(404).json({
                 status: 'error',
-                message: 'Cita no encontrada'
+                message: 'Consulta no encontrada'
             });
         }
     } catch (error) {
@@ -201,21 +201,21 @@ export const updateAppointmentController = async (req: Request, res: Response) =
     }
 };
 
-export const deleteAppointmentController = async (req: Request, res: Response) => {
+export const deleteConsultController = async (req: Request, res: Response) => {
     try {
         const id_usuario = (req as any).user.id;
-        const cita = await getAppointmentByIdService(parseInt(req.params.id), id_usuario);
+        const consulta = await getConsultByIdService(parseInt(req.params.id), id_usuario);
 
-        if (cita) {
-            await deleteAppointmentService(parseInt(req.params.id));
+        if (consulta) {
+            await deleteConsultService(parseInt(req.params.id));
             res.status(201).json({
                 status: 'success',
-                message: 'Cita eliminada exitosamente'
+                message: 'Consulta eliminada exitosamente'
             });
         } else {
             res.status(404).json({
                 status: 'error',
-                message: 'Cita no encontrada'
+                message: 'Consulta no encontrada'
             });
         }
     } catch (error) {

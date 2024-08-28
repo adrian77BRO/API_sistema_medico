@@ -2,6 +2,7 @@ import express from 'express';
 import {
     getAllPatientsController,
     getPatientByIdController,
+    getPatientInfoByIdController,
     getPatientCountController,
     createPatientController,
     updatePatientController,
@@ -14,6 +15,7 @@ const patientRouter = express.Router();
 patientRouter.get('/', authenticateJWT, getAllPatientsController);
 patientRouter.get('/count', authenticateJWT, getPatientCountController);
 patientRouter.get('/:id', authenticateJWT, getPatientByIdController);
+patientRouter.get('/:id/info', authenticateJWT, getPatientInfoByIdController);
 patientRouter.post('/', authenticateJWT, createPatientController);
 patientRouter.put('/:id', authenticateJWT, updatePatientController);
 patientRouter.delete('/:id', authenticateJWT, deletePatientController);

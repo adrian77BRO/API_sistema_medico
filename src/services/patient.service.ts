@@ -14,11 +14,35 @@ export const getPatientByIdService = async (id: number, id_usuario: number): Pro
     return pacientes.length ? pacientes[0] : null;
 };
 
+export const getPatientInfoByIdService = async (id: number, id_usuario: number): Promise<Paciente | null> => {
+    const query = `
+        SELECT p.id_paciente, p.nombre, p.apellidos, p.correo, p.telefono, p.fecha_nacimiento,
+        p.sexo, ts.nombre tipo_sangre, hc.patologias, hc.alergias, hc.intervencion_quirurgica,
+        hc.transfucion_sanguinea, hc.donacion_sanguinea FROM tblc_paciente p
+        JOIN tbl_historial_clinico hc ON p.id_paciente = hc.id_paciente
+        JOIN tblc_tipo_sangre ts ON ts.id_tipo_sangre = hc.id_tipo_sangre
+        WHERE p.id_paciente = ? AND p.fecha_eliminado IS NULL AND p.id_usuario = ?
+    `;
+    const [rows] = await db.query(query, [id, id_usuario]);
+    const pacientes = rows as Paciente[];
+    return pacientes.length ? pacientes[0] : null;
+};
+
 export const getPatientCountService = async (id_usuario: number): Promise<number> => {
     const query = 'SELECT COUNT(*) AS count FROM tblc_paciente WHERE fecha_eliminado IS NULL AND id_usuario = ?';
     const [rows] = await db.query(query, [id_usuario]);
     const count = (rows as { count: number }[])[0].count;
     return count;
+};
+
+export const getPatientsByNameService = async (nombre: string, id_usuario: number): Promise<Paciente | null> => {
+    const query = `
+        SELECT * FROM tblc_paciente WHERE CONCAT(nombre, ' ' , apellidos)
+        LIKE '%a%' AND fecha_eliminado IS NULL AND id_usuario = 3;
+    `;
+    const [rows] = await db.query(query, [id_usuario]);
+    const pacientes = rows as Paciente[];
+    return pacientes.length ? pacientes[0] : null;
 };
 
 export const createPatientService = async (paciente: Omit<Paciente, 'id'>, id_usuario: number): Promise<void> => {
@@ -42,7 +66,7 @@ export const updatePatientService = async (id: number, paciente: Omit<Paciente, 
         direccion = ?, familiar_responsable = ? WHERE id_paciente = ?
     `;
     await db.query(query, [
-        paciente.nombre, paciente.apellidos, paciente.fecha_registro,
+        paciente.nombre, paciente.apellidos, paciente.fecha_nacimiento,
         paciente.sexo, paciente.telefono, paciente.correo,
         paciente.direccion, paciente.familiar_responsable, id
     ]);

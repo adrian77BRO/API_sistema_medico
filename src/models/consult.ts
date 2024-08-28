@@ -1,0 +1,22 @@
+export type Consulta = {
+    id_consulta: number;
+    id_paciente: number;
+    id_usuario: number;
+    padecimientos: string;
+    diagnostico: string;
+    peso: string;
+    estatura: string;
+    temperatura: string;
+    presion: string;
+    masa_corporal: string;
+    saturacion: string;
+    fecha_cita: string;
+    costo: number;
+    observaciones: string;
+    fecha_consulta: string;
+    monto_pagado: number;
+    estatus_pago: number;
+    estatus_consulta: number;
+    fecha_registro: string;
+    fecha_eliminado: string;
+};

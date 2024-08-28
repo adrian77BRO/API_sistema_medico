@@ -20,7 +20,7 @@ appointmentRouter.get('/paciente/:paciente', authenticateJWT, getAppointmentsByP
 appointmentRouter.get('/fecha/:fecha', authenticateJWT, getAppointmentsByDateController);
 appointmentRouter.get('/estatus/:estatus', authenticateJWT, getAppointmentsByStatusController);
 appointmentRouter.get('/:id', authenticateJWT, getAppointmentByIdController);
-appointmentRouter.post('/', authenticateJWT, createAppointmentController);
+appointmentRouter.post('/:paciente', authenticateJWT, createAppointmentController);
 appointmentRouter.put('/:id', authenticateJWT, updateAppointmentController);
 appointmentRouter.delete('/:id', authenticateJWT, deleteAppointmentController);
 

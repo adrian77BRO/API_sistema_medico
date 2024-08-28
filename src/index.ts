@@ -4,6 +4,8 @@ import userRouter from './routes/user.router';
 import patientRouter from './routes/patient.router';
 import historyRouter from './routes/history.router';
 import appointmentRouter from './routes/appointment.router';
+import paymentRouter from './routes/payment.router';
+import consultRouter from './routes/consult.router';
 import attentionRouter from './routes/attention.router';
 import serviceRouter from './routes/service.router';
 import scheduleRouter from './routes/schedule.router';
@@ -19,6 +21,8 @@ app.use('/usuarios', userRouter);
 app.use('/pacientes', patientRouter);
 app.use('/historial', historyRouter);
 app.use('/citas', appointmentRouter);
+app.use('/pagos', paymentRouter)
+app.use('/consultas', consultRouter)
 app.use('/atencion', attentionRouter);
 app.use('/servicios', serviceRouter);
 app.use('/horarios', scheduleRouter);

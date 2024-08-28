@@ -3,7 +3,6 @@ export type Usuario = {
     id_especialidad: number;
     id_medico: number;
     id_municipio: number;
-    id_vendedor: number;
     nombre: string;
     apellidos: string;
     usuario: string;
@@ -11,11 +10,8 @@ export type Usuario = {
     tipo: number;
     estatus: number;
     acceso_app: number;
-    fecha_registro: string;
     telefono: string;
     correo: string;
-    editar: number;
-    eliminar: number;
     direccion: string;
     sobre_mi: string;
     telefono_urgencias: string;
@@ -27,8 +23,4 @@ export type Usuario = {
     instagram: string;
     web: string;
     enlace: string;
-    estatus_principal: number;
-    estatus_citas_web: number;
-    estatus_ubicación: number;
-    tipo_cita: number;
 };

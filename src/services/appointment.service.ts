@@ -22,7 +22,7 @@ export const getAppointmentByIdService = async (id: number, id_usuario: number):
 
 export const getAppointmentsByPatientService = async (id_usuario: number, paciente: string): Promise<Cita[]> => {
     const query = `
-            SELECT CONCAT(p.nombre, ' ', p.apellidos) paciente, c.fecha,
+            SELECT c.id_cita, CONCAT(p.nombre, ' ', p.apellidos) paciente, c.fecha,
             CONCAT(u.nombre, ' ', u.apellidos) usuario, c.estatus
             FROM tbl_cita c JOIN tblc_paciente p ON p.id_paciente = c.id_paciente
             JOIN tblc_usuario u ON u.id_usuario = c.id_usuario
@@ -35,7 +35,7 @@ export const getAppointmentsByPatientService = async (id_usuario: number, pacien
 
 export const getAppointmentsByDateService = async (id_usuario: number, fecha: string,): Promise<Cita[]> => {
     const query = `
-            SELECT CONCAT(p.nombre, ' ', p.apellidos) paciente, c.fecha,
+            SELECT c.id_cita, CONCAT(p.nombre, ' ', p.apellidos) paciente, c.fecha,
             CONCAT(u.nombre, ' ', u.apellidos) usuario, c.estatus
             FROM tbl_cita c JOIN tblc_paciente p ON p.id_paciente = c.id_paciente
             JOIN tblc_usuario u ON u.id_usuario = c.id_usuario
@@ -48,7 +48,7 @@ export const getAppointmentsByDateService = async (id_usuario: number, fecha: st
 
 export const getAppointmentsByStatusService = async (id_usuario: number, estatus: number): Promise<Cita[]> => {
     const query = `
-            SELECT CONCAT(p.nombre, ' ', p.apellidos) paciente, c.fecha,
+            SELECT c.id_cita, CONCAT(p.nombre, ' ', p.apellidos) paciente, c.fecha,
             CONCAT(u.nombre, ' ', u.apellidos) usuario, c.estatus
             FROM tbl_cita c JOIN tblc_paciente p ON p.id_paciente = c.id_paciente
             JOIN tblc_usuario u ON u.id_usuario = c.id_usuario
@@ -65,12 +65,12 @@ export const getAppointmentCountService = async (id_usuario: number): Promise<nu
     return count;
 };
 
-export const createAppointmentService = async (cita: Omit<Cita, 'id'>, id_usuario: number): Promise<void> => {
+export const createAppointmentService = async (cita: Omit<Cita, 'id'>, id_paciente: number, id_usuario: number): Promise<void> => {
     const query = `
         INSERT INTO tbl_cita (fecha, fecha_registro, id_paciente, id_usuario,
         observaciones, estatus, web) VALUES (?, now(), ?, ?, ?, 0, 0)
     `;
-    await db.query(query, [cita.fecha, cita.id_paciente, id_usuario, cita.observaciones]);
+    await db.query(query, [cita.fecha, id_paciente, id_usuario, cita.observaciones]);
 };
 
 export const updateAppointmentService = async (id: number, cita: Omit<Cita, 'id'>): Promise<void> => {

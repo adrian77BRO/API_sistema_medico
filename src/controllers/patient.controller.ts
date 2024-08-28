@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import {
     getAllPatientsService,
     getPatientByIdService,
+    getPatientInfoByIdService,
     getPatientCountService,
     createPatientService,
     updatePatientService,
@@ -36,6 +37,32 @@ export const getPatientByIdController = async (req: Request, res: Response) => {
             res.status(200).json({
                 status: 'success',
                 message: 'Paciente encontrado exitosamente',
+                paciente
+            });
+        } else {
+            res.status(404).json({
+                status: 'error',
+                message: 'Paciente no encontrado'
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al obtener',
+            error
+        });
+    }
+};
+
+export const getPatientInfoByIdController = async (req: Request, res: Response) => {
+    try {
+        const id_usuario = (req as any).user.id;
+        const paciente = await getPatientInfoByIdService(parseInt(req.params.id), id_usuario);
+
+        if (paciente) {
+            res.status(200).json({
+                status: 'success',
+                message: 'Información general del paciente',
                 paciente
             });
         } else {
