@@ -3,8 +3,8 @@ import { Cita } from '../models/appointment';
 
 export const getAllAppointmentsService = async (id_usuario: number): Promise<Cita[]> => {
     const query = `
-            SELECT c.id_cita, CONCAT(p.nombre, ' ', p.apellidos) paciente, c.fecha,
-            CONCAT(u.nombre, ' ', u.apellidos) usuario, c.estatus
+            SELECT c.id_cita, c.id_paciente, CONCAT(p.nombre, ' ', p.apellidos) paciente,
+            c.fecha, CONCAT(u.nombre, ' ', u.apellidos) medico, c.estatus, c.observaciones
             FROM tbl_cita c JOIN tblc_paciente p ON p.id_paciente = c.id_paciente
             JOIN tblc_usuario u ON u.id_usuario = c.id_usuario
             WHERE c.id_usuario = ? AND c.fecha_eliminado IS NULL
@@ -22,8 +22,8 @@ export const getAppointmentByIdService = async (id: number, id_usuario: number):
 
 export const getAppointmentsByPatientService = async (id_usuario: number, paciente: string): Promise<Cita[]> => {
     const query = `
-            SELECT c.id_cita, CONCAT(p.nombre, ' ', p.apellidos) paciente, c.fecha,
-            CONCAT(u.nombre, ' ', u.apellidos) usuario, c.estatus
+            SELECT c.id_cita, c.id_paciente, CONCAT(p.nombre, ' ', p.apellidos) paciente,
+            c.fecha, CONCAT(u.nombre, ' ', u.apellidos) medico, c.estatus, c.observaciones
             FROM tbl_cita c JOIN tblc_paciente p ON p.id_paciente = c.id_paciente
             JOIN tblc_usuario u ON u.id_usuario = c.id_usuario
             WHERE c.id_usuario = ? AND c.fecha_eliminado IS NULL
@@ -35,8 +35,8 @@ export const getAppointmentsByPatientService = async (id_usuario: number, pacien
 
 export const getAppointmentsByDateService = async (id_usuario: number, fecha: string,): Promise<Cita[]> => {
     const query = `
-            SELECT c.id_cita, CONCAT(p.nombre, ' ', p.apellidos) paciente, c.fecha,
-            CONCAT(u.nombre, ' ', u.apellidos) usuario, c.estatus
+            SELECT c.id_cita, CONCAT(p.nombre, ' ', p.apellidos) paciente,
+            c.fecha, CONCAT(u.nombre, ' ', u.apellidos) usuario, c.estatus, c.observaciones
             FROM tbl_cita c JOIN tblc_paciente p ON p.id_paciente = c.id_paciente
             JOIN tblc_usuario u ON u.id_usuario = c.id_usuario
             WHERE c.id_usuario = ? AND c.fecha_eliminado IS NULL
@@ -48,8 +48,8 @@ export const getAppointmentsByDateService = async (id_usuario: number, fecha: st
 
 export const getAppointmentsByStatusService = async (id_usuario: number, estatus: number): Promise<Cita[]> => {
     const query = `
-            SELECT c.id_cita, CONCAT(p.nombre, ' ', p.apellidos) paciente, c.fecha,
-            CONCAT(u.nombre, ' ', u.apellidos) usuario, c.estatus
+            SELECT c.id_cita, c.id_paciente, CONCAT(p.nombre, ' ', p.apellidos) paciente,
+            c.fecha, CONCAT(u.nombre, ' ', u.apellidos) medico, c.estatus, c.observaciones
             FROM tbl_cita c JOIN tblc_paciente p ON p.id_paciente = c.id_paciente
             JOIN tblc_usuario u ON u.id_usuario = c.id_usuario
             WHERE c.id_usuario = ? AND c.fecha_eliminado IS NULL AND c.estatus = ?
@@ -65,12 +65,12 @@ export const getAppointmentCountService = async (id_usuario: number): Promise<nu
     return count;
 };
 
-export const createAppointmentService = async (cita: Omit<Cita, 'id'>, id_paciente: number, id_usuario: number): Promise<void> => {
+export const createAppointmentService = async (cita: Omit<Cita, 'id'>, id_usuario: number): Promise<void> => {
     const query = `
         INSERT INTO tbl_cita (fecha, fecha_registro, id_paciente, id_usuario,
         observaciones, estatus, web) VALUES (?, now(), ?, ?, ?, 0, 0)
     `;
-    await db.query(query, [cita.fecha, id_paciente, id_usuario, cita.observaciones]);
+    await db.query(query, [cita.fecha, cita.id_paciente, id_usuario, cita.observaciones]);
 };
 
 export const updateAppointmentService = async (id: number, cita: Omit<Cita, 'id'>): Promise<void> => {
@@ -80,5 +80,10 @@ export const updateAppointmentService = async (id: number, cita: Omit<Cita, 'id'
 
 export const deleteAppointmentService = async (id: number): Promise<void> => {
     const query = 'UPDATE tbl_cita SET fecha_eliminado = now() WHERE id_cita = ?';
+    await db.query(query, [id]);
+};
+
+export const cancelAppointmentService = async (id: number): Promise<void> => {
+    const query = 'UPDATE tbl_cita SET estatus = 2 WHERE id_cita = ?';
     await db.query(query, [id]);
 };

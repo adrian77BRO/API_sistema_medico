@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import {
     getAllPatientsService,
     getPatientByIdService,
+    getPatientsByNameService,
     getPatientInfoByIdService,
     getPatientCountService,
     createPatientService,
@@ -45,6 +46,25 @@ export const getPatientByIdController = async (req: Request, res: Response) => {
                 message: 'Paciente no encontrado'
             });
         }
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al obtener',
+            error
+        });
+    }
+};
+
+export const getPatientsByNameController = async (req: Request, res: Response) => {
+    try {
+        const id_usuario = (req as any).user.id;
+        const pacientes = await getPatientsByNameService(req.params.paciente, id_usuario);
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Pacientes encontrados',
+            pacientes
+        });
     } catch (error) {
         res.status(500).json({
             status: 'error',

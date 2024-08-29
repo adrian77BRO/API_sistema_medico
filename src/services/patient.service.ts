@@ -14,6 +14,15 @@ export const getPatientByIdService = async (id: number, id_usuario: number): Pro
     return pacientes.length ? pacientes[0] : null;
 };
 
+export const getPatientsByNameService = async (paciente: string, id_usuario: number): Promise<Paciente[]> => {
+    const query = `
+        SELECT * FROM tblc_paciente WHERE CONCAT(nombre, ' ', apellidos)
+        LIKE '%${paciente}%' AND fecha_eliminado IS NULL AND id_usuario = ?
+    `;
+    const [rows] = await db.query(query, [id_usuario]);
+    return rows as Paciente[];
+};
+
 export const getPatientInfoByIdService = async (id: number, id_usuario: number): Promise<Paciente | null> => {
     const query = `
         SELECT p.id_paciente, p.nombre, p.apellidos, p.correo, p.telefono, p.fecha_nacimiento,
@@ -33,16 +42,6 @@ export const getPatientCountService = async (id_usuario: number): Promise<number
     const [rows] = await db.query(query, [id_usuario]);
     const count = (rows as { count: number }[])[0].count;
     return count;
-};
-
-export const getPatientsByNameService = async (nombre: string, id_usuario: number): Promise<Paciente | null> => {
-    const query = `
-        SELECT * FROM tblc_paciente WHERE CONCAT(nombre, ' ' , apellidos)
-        LIKE '%a%' AND fecha_eliminado IS NULL AND id_usuario = 3;
-    `;
-    const [rows] = await db.query(query, [id_usuario]);
-    const pacientes = rows as Paciente[];
-    return pacientes.length ? pacientes[0] : null;
 };
 
 export const createPatientService = async (paciente: Omit<Paciente, 'id'>, id_usuario: number): Promise<void> => {

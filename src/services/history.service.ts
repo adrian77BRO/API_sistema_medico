@@ -16,12 +16,11 @@ export const getAllHistoriesService = async (id_usuario: number): Promise<Histor
 
 export const getHistoryByIdService = async (id: number, id_usuario: number): Promise<Historial | null> => {
     const query = `
-        SELECT hc.id_paciente, ts.nombre tipo_sangre, hc.antecedentes_heredofamiliares,
-        hc.alergias, hc.patologias, hc.intervencion_quirurgica,
+        SELECT hc.id_historial_clinico, hc.id_paciente, ts.nombre tipo_sangre,
+        hc.antecedentes_heredofamiliares, hc.alergias, hc.patologias, hc.intervencion_quirurgica,
         hc.transfucion_sanguinea, hc.donacion_sanguinea, hc.observaciones
-        FROM tbl_historial_clinico hc JOIN tblc_tipo_sangre ts
-        ON ts.id_tipo_sangre = hc.id_tipo_sangre
-        WHERE hc.id_historial_clinico = ? AND hc.id_usuario = ?
+        FROM tbl_historial_clinico hc JOIN tblc_tipo_sangre ts ON ts.id_tipo_sangre = hc.id_tipo_sangre
+        WHERE hc.id_paciente = ? AND hc.id_usuario = ?
     `;
     const [rows] = await db.query(query, [id, id_usuario]);
     const historiales = rows as Historial[];
@@ -52,7 +51,7 @@ export const updateHistoryService = async (id: number, historial: Omit<Historial
     const query = `
         UPDATE tbl_historial_clinico SET id_tipo_sangre = ?, antecedentes_heredofamiliares = ?,
         alergias = ?, patologias = ?, intervencion_quirurgica = ?, transfucion_sanguinea = ?,
-        donacion_sanguinea = ?, observaciones = ? WHERE id_historial_clinico = ?
+        donacion_sanguinea = ?, observaciones = ? WHERE id_paciente = ?
     `;
     await db.query(query, [
         historial.id_tipo_sangre, historial.antecedentes_heredofamiliares,

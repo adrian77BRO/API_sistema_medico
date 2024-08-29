@@ -8,7 +8,8 @@ import {
     getAppointmentsByStatusController,
     createAppointmentController,
     updateAppointmentController,
-    deleteAppointmentController
+    deleteAppointmentController,
+    cancelAppointmentController
 } from '../controllers/appointment.controller';
 import { authenticateJWT } from '../middlewares/auth.middleware';
 
@@ -20,8 +21,9 @@ appointmentRouter.get('/paciente/:paciente', authenticateJWT, getAppointmentsByP
 appointmentRouter.get('/fecha/:fecha', authenticateJWT, getAppointmentsByDateController);
 appointmentRouter.get('/estatus/:estatus', authenticateJWT, getAppointmentsByStatusController);
 appointmentRouter.get('/:id', authenticateJWT, getAppointmentByIdController);
-appointmentRouter.post('/:paciente', authenticateJWT, createAppointmentController);
+appointmentRouter.post('/', authenticateJWT, createAppointmentController);
 appointmentRouter.put('/:id', authenticateJWT, updateAppointmentController);
+appointmentRouter.delete('/cancel/:id', authenticateJWT, cancelAppointmentController)
 appointmentRouter.delete('/:id', authenticateJWT, deleteAppointmentController);
 
 export default appointmentRouter;

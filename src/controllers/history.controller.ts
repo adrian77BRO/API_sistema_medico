@@ -41,7 +41,7 @@ export const getHistoryByIdController = async (req: Request, res: Response) => {
         } else {
             res.status(404).json({
                 status: 'error',
-                message: 'Historial médico no encontrado'
+                message: 'Paciente sin historial médico'
             });
         }
     } catch (error) {
