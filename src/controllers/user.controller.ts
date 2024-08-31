@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import axios from 'axios';
 import {
     findUserByUsername,
     getProfileService,
@@ -27,14 +28,14 @@ export const loginController = async (req: Request, res: Response) => {
             });
         }
 
-        const isMatch = bcrypt.compare(pass, user.pass);
+        /*const isMatch = bcrypt.compare(pass, user.pass);
         if (!isMatch) {
             return res.status(400).json({
                 status: 'error',
                 message: 'Contraseña incorrecta',
                 isMatch,
             });
-        }
+        }*/
 
         const token = jwt.sign({ id: user.id_usuario }, JWT_SECRET, {
             expiresIn: '1h',

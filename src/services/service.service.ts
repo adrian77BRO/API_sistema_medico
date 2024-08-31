@@ -55,5 +55,3 @@ export const deleteServiceService = async (id: number): Promise<void> => {
     const query = 'UPDATE tbl_servicio SET fecha_eliminado = now() WHERE id_servicio = ?';
     await db.query(query, [id]);
 };
-
-//No me gusta tener que poner "service.service" o "createServiceService" :(
