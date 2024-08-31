@@ -61,18 +61,11 @@ export const getConsultsByPatientController = async (req: Request, res: Response
         const id_usuario = (req as any).user.id;
         const consultas = await getConsultsByPatientService(id_usuario, req.params.paciente);
 
-        if (consultas.length > 0) {
-            res.status(200).json({
-                status: 'success',
-                message: 'Consultas encontradas',
-                consultas
-            });
-        } else {
-            res.status(404).json({
-                status: 'error',
-                message: 'No se encontraron resultados'
-            });
-        }
+        res.status(200).json({
+            status: 'success',
+            message: 'Consultas encontradas',
+            consultas
+        });
     } catch (error) {
         res.status(500).json({
             status: 'error',
@@ -87,18 +80,11 @@ export const getConsultsByDateController = async (req: Request, res: Response) =
         const id_usuario = (req as any).user.id;
         const consultas = await getConsultsByDateService(id_usuario, req.params.fecha);
 
-        if (consultas.length > 0) {
-            res.status(200).json({
-                status: 'success',
-                message: 'Consultas encontradas',
-                consultas
-            });
-        } else {
-            res.status(404).json({
-                status: 'error',
-                message: 'No se encontraron resultados'
-            });
-        }
+        res.status(200).json({
+            status: 'success',
+            message: 'Consultas encontradas',
+            consultas
+        });
     } catch (error) {
         res.status(500).json({
             status: 'error',
@@ -113,18 +99,11 @@ export const getConsultsByStatusController = async (req: Request, res: Response)
         const id_usuario = (req as any).user.id;
         const consultas = await getConsultsByStatusService(id_usuario, parseInt(req.params.estatus));
 
-        if (consultas.length > 0) {
-            res.status(200).json({
-                status: 'success',
-                message: 'Consultas encontradas',
-                consultas
-            });
-        } else {
-            res.status(404).json({
-                status: 'error',
-                message: 'No se encontraron resultados'
-            });
-        }
+        res.status(200).json({
+            status: 'success',
+            message: 'Consultas encontradas',
+            consultas
+        });
     } catch (error) {
         res.status(500).json({
             status: 'error',

@@ -81,18 +81,11 @@ export const getAppointmentsByDateController = async (req: Request, res: Respons
         const id_usuario = (req as any).user.id;
         const citas = await getAppointmentsByDateService(id_usuario, req.params.fecha);
 
-        if (citas.length > 0) {
-            res.status(200).json({
-                status: 'success',
-                message: 'Citas encontradas',
-                citas
-            });
-        } else {
-            res.status(404).json({
-                status: 'error',
-                message: 'No se encontraron resultados'
-            });
-        }
+        res.status(200).json({
+            status: 'success',
+            message: 'Citas encontradas',
+            citas
+        });
     } catch (error) {
         res.status(500).json({
             status: 'error',

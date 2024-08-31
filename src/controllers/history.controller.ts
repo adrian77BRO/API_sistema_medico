@@ -32,18 +32,11 @@ export const getHistoryByIdController = async (req: Request, res: Response) => {
         const id_usuario = (req as any).user.id;
         const historial = await getHistoryByIdService(parseInt(req.params.id), id_usuario);
 
-        if (historial) {
-            res.status(200).json({
-                status: 'success',
-                message: 'Historial médico encontrado exitosamente',
-                historial
-            });
-        } else {
-            res.status(404).json({
-                status: 'error',
-                message: 'Paciente sin historial médico'
-            });
-        }
+        res.status(200).json({
+            status: 'success',
+            message: 'Historial médico encontrado exitosamente',
+            historial
+        });
     } catch (error) {
         res.status(500).json({
             status: 'error',

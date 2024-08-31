@@ -2,77 +2,48 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import {
-    findUserByEmail,
+    findUserByUsername,
     getProfileService,
     updateProfileService
 } from '../services/user.service';
 
 const JWT_SECRET = process.env.JWT_SECRET || '';
 
-/*export const registerController = async (req: Request, res: Response) => {
-    try {
-        const nuevoUsuario = req.body;
-        const existeCorreo = await findUserByEmail(nuevoUsuario.correo);
-
-        if (existeCorreo) {
-            await registerUser(nuevoUsuario);
-            return res.status(400).json({
-                status: 'error',
-                message: 'El correo ingresado ya está en uso',
-            });
-        }
-        await registerUser(nuevoUsuario);
-        res.status(201).json({
-            status: 'success',
-            message: 'Usuario nuevo registrado exitosamente',
-            usuario: nuevoUsuario
-
-        });
-    } catch (error) {
-        res.status(500).json({
-            status: 'error',
-            message: 'Error al registrarse',
-            error,
-        });
-        console.error(error);
-    }
-};*/
-
 export const loginController = async (req: Request, res: Response) => {
     try {
-        const { correo, pass } = req.body;
-        const usuario = await findUserByEmail(correo);
+        const { usuario, pass } = req.body;
+        const user = await findUserByUsername(usuario);
 
-        if (!usuario) {
+        if (!user) {
             return res.status(400).json({
                 status: 'error',
-                message: 'Correo incorrecto',
+                message: 'Usuario incorrecto',
+            });
+        }
+        if (user.tipo != 2 || user.acceso_app == 0) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Acceso denegado',
             });
         }
 
-        let encriptado = usuario.pass;
-
-        if (encriptado.startsWith('$2y$')) {
-            encriptado = encriptado.replace('$2y$', '$2a$');
-        }
-
-        const isMatch = bcrypt.compare(pass, encriptado);
+        const isMatch = bcrypt.compare(pass, user.pass);
         if (!isMatch) {
             return res.status(400).json({
                 status: 'error',
                 message: 'Contraseña incorrecta',
-                isMatch
+                isMatch,
             });
         }
 
-        const token = jwt.sign({ id: usuario.id_usuario }, JWT_SECRET, {
+        const token = jwt.sign({ id: user.id_usuario }, JWT_SECRET, {
             expiresIn: '1h',
         });
 
         res.status(200).json({
             status: 'success',
             message: 'Acceso exitoso al sistema',
-            usuario,
+            usuario: user,
             token,
         });
     } catch (error) {

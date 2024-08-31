@@ -8,6 +8,7 @@ export const getAllAppointmentsService = async (id_usuario: number): Promise<Cit
             FROM tbl_cita c JOIN tblc_paciente p ON p.id_paciente = c.id_paciente
             JOIN tblc_usuario u ON u.id_usuario = c.id_usuario
             WHERE c.id_usuario = ? AND c.fecha_eliminado IS NULL
+            AND (c.estatus = 0 OR c.estatus = 2)
     `;
     const [rows] = await db.query(query, [id_usuario]);
     return rows as Cita[];
@@ -40,7 +41,7 @@ export const getAppointmentsByDateService = async (id_usuario: number, fecha: st
             FROM tbl_cita c JOIN tblc_paciente p ON p.id_paciente = c.id_paciente
             JOIN tblc_usuario u ON u.id_usuario = c.id_usuario
             WHERE c.id_usuario = ? AND c.fecha_eliminado IS NULL
-            AND c.fecha LIKE '%${fecha}%'
+            AND c.fecha LIKE '%${fecha}%' AND c.estatus = 0
     `;
     const [rows] = await db.query(query, [id_usuario]);
     return rows as Cita[];
@@ -59,7 +60,7 @@ export const getAppointmentsByStatusService = async (id_usuario: number, estatus
 };
 
 export const getAppointmentCountService = async (id_usuario: number): Promise<number> => {
-    const query = 'SELECT COUNT(*) AS count FROM tbl_cita WHERE fecha_eliminado IS NULL AND id_usuario = ?';
+    const query = 'SELECT COUNT(*) AS count FROM tbl_cita WHERE fecha_eliminado IS NULL AND id_usuario = ? AND (estatus = 0 OR estatus = 2)';
     const [rows] = await db.query(query, [id_usuario]);
     const count = (rows as { count: number }[])[0].count;
     return count;

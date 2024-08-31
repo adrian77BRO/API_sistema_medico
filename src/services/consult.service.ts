@@ -4,8 +4,9 @@ import { Consulta } from '../models/consult';
 export const getAllConsultsService = async (id_usuario: number): Promise<Consulta[]> => {
     const query = `
             SELECT c.id_consulta, CONCAT(p.nombre, ' ', p.apellidos) paciente,
-            c.fecha_cita, CONCAT(u.nombre, ' ', u.apellidos) usuario,
-            c.padecimientos, c.diagnostico, c.costo, c.monto_pagado,
+            p.telefono, c.fecha_consulta, CONCAT(u.nombre, ' ', u.apellidos) medico,
+            c.padecimientos, c.diagnostico, c.peso, c.estatura, c.temperatura,
+            c.presion, c.masa_corporal, c.saturacion, c.costo, c.monto_pagado,
             (c.costo - c.monto_pagado) monto_restante FROM tbl_consulta c
             JOIN tblc_paciente p ON p.id_paciente = c.id_paciente
             JOIN tblc_usuario u ON u.id_usuario = c.id_usuario
@@ -25,8 +26,9 @@ export const getConsultByIdService = async (id: number, id_usuario: number): Pro
 export const getConsultsByPatientService = async (id_usuario: number, paciente: string): Promise<Consulta[]> => {
     const query = `
             SELECT c.id_consulta, CONCAT(p.nombre, ' ', p.apellidos) paciente,
-            c.fecha_cita, CONCAT(u.nombre, ' ', u.apellidos) usuario,
-            c.padecimientos, c.diagnostico, c.costo, c.monto_pagado,
+            p.telefono, c.fecha_consulta, CONCAT(u.nombre, ' ', u.apellidos) medico,
+            c.padecimientos, c.diagnostico, c.peso, c.estatura, c.temperatura,
+            c.presion, c.masa_corporal, c.saturacion, c.costo, c.monto_pagado,
             (c.costo - c.monto_pagado) monto_restante FROM tbl_consulta c
             JOIN tblc_paciente p ON p.id_paciente = c.id_paciente
             JOIN tblc_usuario u ON u.id_usuario = c.id_usuario
@@ -40,13 +42,14 @@ export const getConsultsByPatientService = async (id_usuario: number, paciente: 
 export const getConsultsByDateService = async (id_usuario: number, fecha: string,): Promise<Consulta[]> => {
     const query = `
             SELECT c.id_consulta, CONCAT(p.nombre, ' ', p.apellidos) paciente,
-            c.fecha_cita, CONCAT(u.nombre, ' ', u.apellidos) usuario,
-            c.padecimientos, c.diagnostico, c.costo, c.monto_pagado,
+            p.telefono, c.fecha_consulta, CONCAT(u.nombre, ' ', u.apellidos) medico,
+            c.padecimientos, c.diagnostico, c.peso, c.estatura, c.temperatura,
+            c.presion, c.masa_corporal, c.saturacion, c.costo, c.monto_pagado,
             (c.costo - c.monto_pagado) monto_restante FROM tbl_consulta c
             JOIN tblc_paciente p ON p.id_paciente = c.id_paciente
             JOIN tblc_usuario u ON u.id_usuario = c.id_usuario
             WHERE c.id_usuario = ? AND c.fecha_eliminado IS NULL
-            AND c.fecha_cita LIKE '%${fecha}%'
+            AND c.fecha_consulta LIKE '%${fecha}%'
     `;
     const [rows] = await db.query(query, [id_usuario]);
     return rows as Consulta[];
@@ -55,13 +58,13 @@ export const getConsultsByDateService = async (id_usuario: number, fecha: string
 export const getConsultsByStatusService = async (id_usuario: number, estatus: number): Promise<Consulta[]> => {
     const query = `
             SELECT c.id_consulta, CONCAT(p.nombre, ' ', p.apellidos) paciente,
-            c.fecha_cita, CONCAT(u.nombre, ' ', u.apellidos) usuario,
-            c.padecimientos, c.diagnostico, c.costo, c.monto_pagado,
+            p.telefono, c.fecha_consulta, CONCAT(u.nombre, ' ', u.apellidos) medico,
+            c.padecimientos, c.diagnostico, c.peso, c.estatura, c.temperatura,
+            c.presion, c.masa_corporal, c.saturacion, c.costo, c.monto_pagado,
             (c.costo - c.monto_pagado) monto_restante FROM tbl_consulta c
             JOIN tblc_paciente p ON p.id_paciente = c.id_paciente
             JOIN tblc_usuario u ON u.id_usuario = c.id_usuario
-            WHERE c.id_usuario = ? AND c.fecha_eliminado IS NULL
-            AND c.estatus_pago = ?
+            WHERE c.id_usuario = ? AND c.fecha_eliminado IS NULL AND c.estatus_pago = ?
     `;
     const [rows] = await db.query(query, [id_usuario, estatus]);
     return rows as Consulta[];
